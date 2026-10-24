@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusClub Hub - College Club Management Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand-logo">
+        <i class="fa-solid fa-graduation-cap brand-icon"></i>
+        <div class="brand-text">
+          <span class="logo-title">CampusClub<span class="highlight">Hub</span></span>
+          <span class="logo-subtitle">Thiru A. Govindasamy Govt Arts College</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#clubs" class="active"><i class="fa-solid fa-shapes"></i> Clubs Directory</a>
+        <a href="#events"><i class="fa-solid fa-calendar-check"></i> Announcements</a>
+        <a href="#my-clubs"><i class="fa-solid fa-id-card"></i> My Memberships</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn btn-secondary" onclick="openAddEventModal()">
+          <i class="fa-solid fa-bullhorn"></i> Post Announcement
+        </button>
+        <button class="btn btn-primary" onclick="openProfileModal()">
+          <i class="fa-solid fa-user-check"></i> <span id="nav-user-label">ROOBEENA.A</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero & Statistics Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Official Student Activity Portal</div>
+      <h1 class="hero-heading">Discover, Join & Excel in College Clubs</h1>
+      <p class="hero-lead">Empowering student communities, leadership, technical innovation, and arts across our college campus.</p>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon tech"><i class="fa-solid fa-code"></i></div>
+          <div>
+            <h3 id="stat-club-count">6</h3>
+            <p>Active Student Clubs</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon members"><i class="fa-solid fa-users"></i></div>
+          <div>
+            <h3 id="stat-member-count">248</h3>
+            <p>Registered Members</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon events"><i class="fa-solid fa-calendar-days"></i></div>
+          <div>
+            <h3 id="stat-event-count">4</h3>
+            <p>Upcoming Events</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <main class="main-container" id="clubs">
+    
+    <!-- Filter and Search Toolbar -->
+    <section class="toolbar-section">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" placeholder="Search clubs by name, skills, or keywords..." oninput="handleSearchFilter()">
+      </div>
+      
+      <div class="category-filters" id="category-pills">
+        <button class="pill-btn active" data-category="ALL" onclick="filterByCategory('ALL')">All Clubs</button>
+        <button class="pill-btn" data-category="Technical" onclick="filterByCategory('Technical')">💻 Technical</button>
+        <button class="pill-btn" data-category="Arts & Culture" onclick="filterByCategory('Arts & Culture')">🎨 Arts & Culture</button>
+        <button class="pill-btn" data-category="Sports & Fitness" onclick="filterByCategory('Sports & Fitness')">🏆 Sports & Fitness</button>
+        <button class="pill-btn" data-category="Social Welfare" onclick="filterByCategory('Social Welfare')">🤝 Social Service</button>
+      </div>
+    </section>
+
+    <!-- Clubs Grid Section -->
+    <section class="clubs-grid-section">
+      <div class="section-header">
+        <div>
+          <h2>Available Campus Clubs</h2>
+          <p id="catalog-count-label">Showing all verified clubs</p>
+        </div>
+      </div>
+      
+      <div class="clubs-grid" id="clubs-container">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Announcements & Upcoming Events Section -->
+    <section class="events-section" id="events">
+      <div class="section-header">
+        <div>
+          <h2><i class="fa-solid fa-bullhorn text-accent"></i> Campus Announcements & Events</h2>
+          <p>Stay updated with workshops, hackathons, seminars, and club meetings</p>
+        </div>
+        <button class="btn btn-secondary" onclick="openAddEventModal()">
+          <i class="fa-solid fa-plus"></i> New Announcement
+        </button>
+      </div>
+
+      <div class="events-grid" id="events-container">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- My Memberships Section -->
+    <section class="my-memberships-section" id="my-clubs">
+      <div class="section-header">
+        <div>
+          <h2><i class="fa-solid fa-id-badge text-accent"></i> My Active Memberships</h2>
+          <p>Clubs you have currently enrolled in using this portal</p>
+        </div>
+      </div>
+      <div class="enrolled-grid" id="my-memberships-container">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Club Information, Tabbed Member Directory & Events -->
+  <div class="modal-overlay" id="club-info-modal">
+    <div class="modal-box modal-lg">
+      <button class="modal-close-btn" onclick="closeModal('club-info-modal')"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="modal-header-banner" id="modal-club-banner">
+        <span class="badge" id="modal-club-cat">Category</span>
+        <h2 id="modal-club-title">Club Title</h2>
+        <p id="modal-club-tagline">Tagline goes here</p>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="tab-btn active" onclick="switchClubTab('about')"><i class="fa-solid fa-circle-info"></i> About</button>
+        <button class="tab-btn" onclick="switchClubTab('members')"><i class="fa-solid fa-users"></i> Member Directory (<span id="modal-member-count">0</span>)</button>
+        <button class="tab-btn" onclick="switchClubTab('events')"><i class="fa-solid fa-calendar"></i> Club Events (<span id="modal-event-count">0</span>)</button>
+      </div>
+
+      <div class="modal-body-content">
+        <!-- Tab: About -->
+        <div class="tab-pane active" id="tab-about">
+          <div class="info-block">
+            <h4>Description & Objectives</h4>
+            <p id="modal-club-desc">Detailed club description...</p>
+          </div>
+          <div class="grid-2col info-details">
+            <div class="meta-item">
+              <i class="fa-solid fa-user-tie"></i>
+              <div>
+                <strong>Faculty Coordinator</strong>
+                <span id="modal-club-coordinator">Prof. Name</span>
+              </div>
+            </div>
+            <div class="meta-item">
+              <i class="fa-solid fa-location-dot"></i>
+              <div>
+                <strong>Meeting Venue</strong>
+                <span id="modal-club-venue">Room 204, Tech Block</span>
+              </div>
+            </div>
+            <div class="meta-item">
+              <i class="fa-solid fa-clock"></i>
+              <div>
+                <strong>Regular Meeting Schedule</strong>
+                <span id="modal-club-schedule">Every Wednesday 4:00 PM</span>
+              </div>
+            </div>
+            <div class="meta-item">
+              <i class="fa-solid fa-envelope"></i>
+              <div>
+                <strong>Official Email</strong>
+                <span id="modal-club-email">club@college.edu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Members -->
+        <div class="tab-pane" id="tab-members">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Roll / Reg No</th>
+                  <th>Student Name</th>
+                  <th>Department</th>
+                  <th>Join Date</th>
+                </tr>
+              </thead>
+              <tbody id="modal-members-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab: Events -->
+        <div class="tab-pane" id="tab-events">
+          <div id="modal-events-list" class="events-list-vertical">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('club-info-modal')">Close</button>
+        <div id="modal-membership-action-container">
+          <!-- Join / Leave dynamic button -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Member Registration with Form Validation -->
+  <div class="modal-overlay" id="registration-modal">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeModal('registration-modal')"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="modal-header">
+        <i class="fa-solid fa-user-plus icon-title"></i>
+        <div>
+          <h3>Club Member Registration</h3>
+          <p id="reg-club-subtext">Registering for club membership</p>
+        </div>
+      </div>
+
+      <form id="member-registration-form" onsubmit="handleRegistrationSubmit(event)">
+        <input type="hidden" id="reg-club-id">
+
+        <div class="form-group">
+          <label for="reg-name">Full Student Name <span class="req">*</span></label>
+          <input type="text" id="reg-name" placeholder="e.g. ROOBEENA.A" required>
+          <small class="error-msg" id="err-name"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-regno">Register Number (12-18 Digits) <span class="req">*</span></label>
+          <input type="text" id="reg-regno" placeholder="e.g. 25132061802522068" required>
+          <small class="error-msg" id="err-regno"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-studentid">College Student ID <span class="req">*</span></label>
+          <input type="text" id="reg-studentid" placeholder="e.g. 20625UCSE233" required>
+          <small class="error-msg" id="err-studentid"></small>
+        </div>
+
+        <div class="grid-2col">
+          <div class="form-group">
+            <label for="reg-dept">Department <span class="req">*</span></label>
+            <select id="reg-dept" required>
+              <option value="B.Sc. Computer Science" selected>B.Sc. Computer Science</option>
+              <option value="B.Sc. Mathematics">B.Sc. Mathematics</option>
+              <option value="B.Sc. Physics">B.Sc. Physics</option>
+              <option value="B.Com">B.Com</option>
+              <option value="B.A. English">B.A. English</option>
+              <option value="B.A. Tamil">B.A. Tamil</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="reg-year">Year of Study <span class="req">*</span></label>
+            <select id="reg-year" required>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year" selected>3rd Year</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">Email Address <span class="req">*</span></label>
+          <input type="email" id="reg-email" placeholder="student@college.edu" required>
+          <small class="error-msg" id="err-email"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="reg-phone">Phone Number (10 Digits) <span class="req">*</span></label>
+          <input type="tel" id="reg-phone" placeholder="9876543210" required>
+          <small class="error-msg" id="err-phone"></small>
+        </div>
+
+        <div class="form-checkbox">
+          <input type="checkbox" id="reg-terms" required>
+          <label for="reg-terms">I agree to attend club sessions and abide by the college code of conduct.</label>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('registration-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i> Complete Registration</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Post Event Announcement -->
+  <div class="modal-overlay" id="add-event-modal">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeModal('add-event-modal')"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="modal-header">
+        <i class="fa-solid fa-bullhorn icon-title"></i>
+        <div>
+          <h3>Create Event Announcement</h3>
+          <p>Publish an event or workshop for student members</p>
+        </div>
+      </div>
+
+      <form id="add-event-form" onsubmit="handleAddEventSubmit(event)">
+        <div class="form-group">
+          <label for="event-club-select">Organizing Club <span class="req">*</span></label>
+          <select id="event-club-select" required>
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="event-title">Event Title <span class="req">*</span></label>
+          <input type="text" id="event-title" placeholder="e.g. Annual Web Development Hackathon" required>
+        </div>
+
+        <div class="grid-2col">
+          <div class="form-group">
+            <label for="event-date">Date <span class="req">*</span></label>
+            <input type="date" id="event-date" required>
+          </div>
+          <div class="form-group">
+            <label for="event-time">Time <span class="req">*</span></label>
+            <input type="time" id="event-time" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="event-venue">Venue / Platform <span class="req">*</span></label>
+          <input type="text" id="event-venue" placeholder="e.g. Computer Science Lab 1" required>
+        </div>
+
+        <div class="form-group">
+          <label for="event-description">Event Description <span class="req">*</span></label>
+          <textarea id="event-description" rows="3" placeholder="Provide details regarding the workshop or schedule..." required></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('add-event-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Publish Announcement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div>
+        <h4>CampusClub Hub</h4>
+        <p>Thiru A. Govindasamy Government Arts College</p>
+        <p class="text-muted">Developed by ROOBEENA.A (Reg No: 25132061802522068) · Dept of Computer Science</p>
+      </div>
+      <div class="footer-status">
+        <span class="pulse-indicator"></span> LocalStorage Persistence Active
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
